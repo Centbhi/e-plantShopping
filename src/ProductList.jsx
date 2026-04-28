@@ -258,7 +258,7 @@ function ProductList({ onHomeClick }) {
     };
 
     const handleAddToCart = (product) => {
-        dispatch(addItem, product)
+        dispatch(addItem(product))
         setAddedToCart((prevState)=> ({
             ...prevState, [product.name]: true
         }))
@@ -289,7 +289,9 @@ function ProductList({ onHomeClick }) {
                         <div key={categoryIndex}>
                             <h1> {category.category} </h1>
                             <div className="product-list">
-                            {category.plants.map((plant, plantIndex) => (
+                            {category.plants.map((plant, plantIndex) => {
+                                const isAdded = addedToCart[plant.name];
+                                return(
                                 <div className="product-card" key={plantIndex}>
                                     <div>
                                         <img src={plant.image} alt={plant.name} className="product-image" />
@@ -297,10 +299,12 @@ function ProductList({ onHomeClick }) {
                                     <div className="product-title">{plant.name}</div>
                                     <div className="product-description">{plant.description}</div>
                                     <div className="product-cost">{plant.cost}</div>
-                                    <button className='product-button' onClick={()=>handleAddToCart(plant)}> Add to Cart </button>
+                                    <button className={`product-button ${isAdded ? 'added-to-cart' : ''}` }
+                                        onClick={()=>handleAddToCart(plant)}
+                                        disabled={isAdded}
+                                    > {isAdded ? "Added to Cart" : "Add to Cart" }</button>
                                 </div>
-
-                            ))}
+                            )})}
                             </div>
                         </div>
                     ))}
